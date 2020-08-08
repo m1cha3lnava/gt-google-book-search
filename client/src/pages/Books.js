@@ -5,7 +5,7 @@ import API from "../utils/API";
 import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
 import { List, ListItem } from "../components/List";
-import { Input, TextArea, FormBtn } from "../components/Form";
+import { Input, FormBtn } from "../components/Form";
 
 function Books() {
   // Setting our component's initial state
@@ -56,10 +56,10 @@ function Books() {
 
     return (
       <Container fluid>
-        <Row>
-          <Col size="md-6">
+          <Col size="md">
             <Jumbotron>
-              <h1>What Books Should I Read?</h1>
+              <h1>Google Books Search</h1>
+              <h5>Search for and Save Books of Interest</h5>
             </Jumbotron>
             <form>
               <Input
@@ -67,25 +67,15 @@ function Books() {
                 name="title"
                 placeholder="Title (required)"
               />
-              <Input
-                onChange={handleInputChange}
-                name="author"
-                placeholder="Author (required)"
-              />
-              <TextArea
-                onChange={handleInputChange}
-                name="synopsis"
-                placeholder="Synopsis (Optional)"
-              />
               <FormBtn
                 disabled={!(formObject.author && formObject.title)}
                 onClick={handleFormSubmit}
               >
-                Submit Book
+                Search Book
               </FormBtn>
             </form>
           </Col>
-          <Col size="md-6 sm-12">
+          <Col size="md sm-12">
             <Jumbotron>
               <h1>Books On My List</h1>
             </Jumbotron>
@@ -106,7 +96,6 @@ function Books() {
               <h3>No Results to Display</h3>
             )}
           </Col>
-        </Row>
       </Container>
     );
   }
