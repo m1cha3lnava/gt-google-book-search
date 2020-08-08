@@ -4,97 +4,99 @@ import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API";
 import { Link } from "react-router-dom";
 import { Col, Container } from "../components/Grid";
-import { List, ListItem } from "../components/List";
-import { Input, FormBtn } from "../components/Form";
 
+import { Input, FormBtn } from "../components/Form";
+import { ResultList, ResultListItem } from "../components/ResultList";
 function Books() {
   // Setting our component's initial state
-  const [books, setBooks] = useState([])
-  const [formObject, setFormObject] = useState({})
-
+  const [books, setBooks] = useState([]);
+  const [formObject, setFormObject] = useState({});
+  const [title, setTitle] = useState("");
   // Load all books and store them with setBooks
-  useEffect(() => {
-    loadBooks()
-  }, [])
+  useEffect(() => {}, []);
 
   // Loads all books and sets them to books
-  function loadBooks() {
-    API.getBooks()
-      .then(res => 
-        setBooks(res.data)
-      )
-      .catch(err => console.log(err));
-  };
+  function loadBooks(title) {
+    API.getGoogleBooks(title)
+      .then((res) => {
+        console.log(res.data);
+        setBooks(res.data);
+      })
+      .catch((err) => console.log(err));
+  }
 
   // Deletes a book from the database with a given id, then reloads books from the db
   function deleteBook(id) {
     API.deleteBook(id)
-      .then(res => loadBooks())
-      .catch(err => console.log(err));
+      .then((res) => loadBooks())
+      .catch((err) => console.log(err));
   }
 
   // Handles updating component state when the user types into the input field
   function handleInputChange(event) {
-    const { name, value } = event.target;
-    setFormObject({...formObject, [name]: value})
-  };
+    const { value } = event.target;
+    setTitle(value);
+    console.log(value);
+    //setFormObject({ ...formObject, [name]: value });
+  }
 
   // When the form is submitted, use the API.saveBook method to save the book data
   // Then reload books from the database
-  function handleFormSubmit(event) {
+  const handleFormSubmit = (event) => {
     event.preventDefault();
-      API.getBook({
-        title: formObject.title,
-      })
-        .then(res => loadBooks())
-        .catch(err => console.log(err));
+    console.log(title);
+    // alert("click");
+    loadBooks(title);
   };
 
-    return (
-      <Container fluid>
-          <Col size="md">
-            <Jumbotron>
-              <h1>Google Books Search</h1>
-              <h5>Search for and Save Books of Interest</h5>
-            </Jumbotron>
-            <form>
-              <Input
-                onChange={handleInputChange}
-                name="title"
-                placeholder="Title (required)"
-              />
-              <FormBtn
-                disabled={!(formObject.author && formObject.title)}
-                onClick={handleFormSubmit}
+  return (
+    <Container fluid>
+      <Col size="md">
+        <Jumbotron>
+          <h1>Google Books Search</h1>
+          <h5>Search for and Save Books of Interest</h5>
+        </Jumbotron>
+        <form>
+          <Input
+            onChange={handleInputChange}
+            name="title"
+            value={title}
+            placeholder="Title (required)"
+          />
+          <button onClick={handleFormSubmit}>Search Book</button>
+        </form>
+      </Col>
+      <Col size="md sm-12">
+        <Jumbotron>
+          <h1>Books On My List</h1>
+        </Jumbotron>
+        {books.length ? (
+          <ResultList>
+            {console.log(title)}
+            {books.map((book, id) => (
+              <ResultListItem
+                title={book.volumeInfo.title}
+                description={book.volumeInfo.description}
+                thumbnail={book.volumeInfo.imageLinks.thumbnail}
+                href={book.volumeInfo.infoLink}
+                key={id}
               >
-                Search Book
-              </FormBtn>
-            </form>
-          </Col>
-          <Col size="md sm-12">
-            <Jumbotron>
-              <h1>Books On My List</h1>
-            </Jumbotron>
-            {books.length ? (
-              <List>
-                {books.map(book => (
-                  <ListItem key={book._id}>
-                    <Link to={"/books/" + book._id}>
-                      <strong>
-                        {book.title} by {book.author}
-                      </strong>
-                    </Link>
-                    <DeleteBtn onClick={() => deleteBook(book._id)} />
-                  </ListItem>
-                ))}
-              </List>
-            ) : (
-              <h3>No Results to Display</h3>
-            )}
-          </Col>
-      </Container>
-    );
-  }
-
+                <a href={book.volumeInfo.infoLink}>
+                  <strong>
+                    {book.volumeInfo.title} by
+                    {book.volumeInfo.authors}
+                  </strong>
+                </a>
+                {/* <DeleteBtn onClick={() => deleteBook(book._id)} /> */}
+              </ResultListItem>
+            ))}
+          </ResultList>
+        ) : (
+          <h3>No Results to Display</h3>
+        )}
+      </Col>
+    </Container>
+  );
+}
 
 export default Books;

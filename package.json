@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/m1cha3lnava/gt-google-book-search#readme",
   "dependencies": {
+    "axios": "^0.19.2",
     "concurrently": "^5.3.0",
     "express": "^4.17.1",
     "if-env": "^1.0.4",

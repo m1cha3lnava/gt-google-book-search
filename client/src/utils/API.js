@@ -7,8 +7,8 @@ export default {
     return axios.get("/api/books");
   },
   // Gets the book with the given id
-  getBook: function (id) {
-    return axios.get("https://www.googleapis.com/books/v1/volumes?q=" + id);
+  getGoogleBooks: function (title) {
+    return axios.get("/api/googlebooks/" + title);
   },
   // Deletes the book with the given id
   deleteBook: function (id) {
