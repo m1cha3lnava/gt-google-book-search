@@ -3,9 +3,9 @@ import DeleteBtn from "../components/DeleteBtn";
 import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API";
 import { Col, Container } from "../components/Grid";
-
 import { Input } from "../components/Form";
 import { ResultList, ResultListItem } from "../components/ResultList";
+
 function Books() {
   // Setting our component's initial state
   const [books, setBooks] = useState([]);
@@ -55,16 +55,19 @@ function Books() {
           <h1>Google Books Search</h1>
           <h5>Search for and Save Books of Interest</h5>
         </Jumbotron>
-        <form>
+        <form className="form-control">
           <Input
             onChange={handleInputChange}
             name="title"
             value={title}
-            placeholder="Title (required)"
+            placeholder="Book Title"
           />
-          <button onClick={handleFormSubmit}>Search Book</button>
+          <button className="btn btn-info" onClick={handleFormSubmit}>
+            Search Book
+          </button>
         </form>
       </Col>
+      <br />
       <Col size="md sm-12">
         {books.length ? (
           <ResultList>
@@ -91,9 +94,6 @@ function Books() {
           <h3>No Results to Display</h3>
         )}
       </Col>
-      <Jumbotron>
-        <h1>Books On My List</h1>
-      </Jumbotron>
     </Container>
   );
 }
