@@ -2,15 +2,14 @@ import React, { useState, useEffect } from "react";
 import DeleteBtn from "../components/DeleteBtn";
 import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API";
-import { Link } from "react-router-dom";
 import { Col, Container } from "../components/Grid";
 
-import { Input, FormBtn } from "../components/Form";
+import { Input } from "../components/Form";
 import { ResultList, ResultListItem } from "../components/ResultList";
 function Books() {
   // Setting our component's initial state
   const [books, setBooks] = useState([]);
-  const [formObject, setFormObject] = useState({});
+  // const [formObject, setFormObject] = useState({});
   const [title, setTitle] = useState("");
   // Load all books and store them with setBooks
   useEffect(() => {}, []);
@@ -67,9 +66,6 @@ function Books() {
         </form>
       </Col>
       <Col size="md sm-12">
-        <Jumbotron>
-          <h1>Books On My List</h1>
-        </Jumbotron>
         {books.length ? (
           <ResultList>
             {console.log(title)}
@@ -87,7 +83,7 @@ function Books() {
                     {book.volumeInfo.authors}
                   </strong>
                 </a>
-                {/* <DeleteBtn onClick={() => deleteBook(book._id)} /> */}
+                <DeleteBtn onClick={() => deleteBook(book._id)} />
               </ResultListItem>
             ))}
           </ResultList>
@@ -95,6 +91,9 @@ function Books() {
           <h3>No Results to Display</h3>
         )}
       </Col>
+      <Jumbotron>
+        <h1>Books On My List</h1>
+      </Jumbotron>
     </Container>
   );
 }
