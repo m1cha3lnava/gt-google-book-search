@@ -3,19 +3,29 @@ import { Link, useParams } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
 import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API";
-import { ResultList } from "../components/ResultList";
+import { ResultList, ResultListItem } from "../components/ResultList";
 
 function Saved(props) {
-  const [book, setBook] = useState({});
+  const [books, setBook] = useState([]);
 
   // When this component mounts, grab the book with the _id of props.match.params.id
   // e.g. localhost:3000/books/599dcb67f0f16317844583fc
   const { id } = useParams();
   useEffect(() => {
-    API.getBooks(id)
+    loadBooks();
+  }, []);
+
+  function loadBooks() {
+    API.getBooks()
       .then((res) => setBook(res.data))
       .catch((err) => console.log(err));
-  }, []);
+  }
+  // Deletes a book from the database with a given id, then reloads books from the db
+  function handleDelete(id) {
+    API.deleteBook(id)
+      .then((res) => loadBooks())
+      .catch((err) => console.log(err));
+  }
 
   return (
     <Container fluid>
@@ -27,13 +37,32 @@ function Saved(props) {
         </Col>
       </Row>
       <Row>
-        <Col size="md-10 md-offset-1">
-          <ResultList title="Harry Potter" description="Sample book" />
-        </Col>
-      </Row>
-      <Row>
-        <Col size="md-2">
-          <Link to="/">← Back to Search</Link>
+        <Col size="md sm-12">
+          {books.length ? (
+            <ResultList>
+              {books.map((book, id) => (
+                <ResultListItem
+                  title={book.title}
+                  description={book.synopsis}
+                  thumbnail={book.image}
+                  href={book.link}
+                  key={id}
+                  id={book._id}
+                  handleDelete={handleDelete}
+                  authors={book.authors}
+                >
+                  <a href={book.link}>
+                    <strong>
+                      {book.title} by
+                      {book.authors}
+                    </strong>
+                  </a>
+                </ResultListItem>
+              ))}
+            </ResultList>
+          ) : (
+            <h3>No Results to Display</h3>
+          )}
         </Col>
       </Row>
     </Container>

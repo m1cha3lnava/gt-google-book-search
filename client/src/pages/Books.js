@@ -24,13 +24,6 @@ function Books() {
       .catch((err) => console.log(err));
   }
 
-  // Deletes a book from the database with a given id, then reloads books from the db
-  function deleteBook(id) {
-    API.deleteBook(id)
-      .then((res) => loadBooks())
-      .catch((err) => console.log(err));
-  }
-
   // Handles updating component state when the user types into the input field
   function handleInputChange(event) {
     const { value } = event.target;
@@ -47,7 +40,12 @@ function Books() {
     // alert("click");
     loadBooks(title);
   };
-
+  const handleSave = (book) => {
+    // console.log(book);
+    API.saveBook(book).then((results) => {
+      console.log(results);
+    });
+  };
   return (
     <Container fluid>
       <Col size="md">
@@ -79,6 +77,8 @@ function Books() {
                 thumbnail={book.volumeInfo.imageLinks.thumbnail}
                 href={book.volumeInfo.infoLink}
                 key={id}
+                handleSave={handleSave}
+                authors={book.volumeInfo.authors}
               >
                 <a href={book.volumeInfo.infoLink}>
                   <strong>
@@ -86,7 +86,6 @@ function Books() {
                     {book.volumeInfo.authors}
                   </strong>
                 </a>
-                <DeleteBtn onClick={() => deleteBook(book._id)} />
               </ResultListItem>
             ))}
           </ResultList>
